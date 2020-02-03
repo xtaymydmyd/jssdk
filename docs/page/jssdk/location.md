@@ -2,51 +2,6 @@
 
 参考文档：`https://qydev.weixin.qq.com/wiki/index.php?title=%E5%BE%AE%E4%BF%A1JS%E6%8E%A5%E5%8F%A3`
 
-# JS-SDK使用权限签名算法
-第一步:拿到的access_token 采用http POST方式请求获得jsapi_ticket
-
-![avatar](../../image/wechat/1.png)
-
-请求地址：`http://njust.openapi.lordar.com/token/getInternalToken`
- 
-请求参数：
-```params
-{
-    "serverType":"QY",
-    "appId":"wxf2f6f120053cf5eb",
-    "appSecret":"Z0X38ZNxZGB5tDnQzHqvQ_yficWy32IhJz3rflVFr2o"
-}
-```
->! appSecret请勿轻易泄露，泄露后会影响应用使用
-
-返回数据：
-```return
-{
-    status: 0,
-    message: 'success',
-    timestamp: 'xxxxxxxxxxx',
-    data: {
-        accessToken: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-        apiTicket: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-        jsapiTicket: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-        serviceType: 'QY',
-        expiresIn: 7200
-    }
-}
-```
-
-第二步：生成JS-SDK权限验证的签名
-参考文档：`https://qydev.weixin.qq.com/wiki/index.php?title=%E5%BE%AE%E4%BF%A1JS%E6%8E%A5%E5%8F%A3#.E9.99.84.E5.BD.951-JS-SDK.E4.BD.BF.E7.94.A8.E6.9D.83.E9.99.90.E7.AD.BE.E5.90.8D.E7.AE.97.E6.B3.95`
-
-示例：
-```demo
-    noncestr=Wm3WZYTPz0wzccnW
-    jsapi_ticket=sM4AOVdWfPE4DxkXGEs8VMCPGGVi4C3VM0P37wVUCFvkVAy_90u5h9nbSlYy3-Sl-HhTdfl2fzFy1AOcHKP7qg
-    timestamp=1414587457
-    url=http://mp.weixin.qq.com
-```
-
-
 ### 步骤一：引入JS文件
 
 在需要调用JS接口的页面引入如下JS文件，（支持https）：`http://res.wx.qq.com/open/js/jweixin-1.0.0.js`,代码如下：
@@ -69,11 +24,12 @@
 第一步：调用签名接口获取appId、timestamp、nonceStr以及signature
 
 ```js
-// 示例示示例，签名接口请自行开发
-// 参考文档：`https://qydev.weixin.qq.com/wiki/index.php?title=%E5%BE%AE%E4%BF%A1JS%E6%8E%A5%E5%8F%A3#.E9.99.84.E5.BD.951-JS-SDK.E4.BD.BF.E7.94.A8.E6.9D.83.E9.99.90.E7.AD.BE.E5.90.8D.E7.AE.97.E6.B3.95`
 querySignature() {
-    var url = HOST + 'signature'
-    http.apiPost(url, { url: window.location.href }).then(res => {
+    var url = 'http://njust.openapi.lordar.com/signature'
+    var param = {
+        url: window.location.href
+    }
+    http.apiPost(url, param).then(res => {
         if (res.status == 0) {
             // 签名成功后
             var signatureParams = res.data
@@ -89,7 +45,7 @@ useJsApi(signatureParams) {
     var _this = this
     parent.wx.config({
         debug: false,
-        appId: 'wxf2f6f120053cf5eb', // 必填，企业号的唯一标识，此处填写企业号corpid
+        appId: signatureParams.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
         timestamp: signatureParams.timestamp, // 必填，生成签名的时间戳
         nonceStr: signatureParams.nonceStr, // 必填，生成签名的随机串
         signature: signatureParams.signature, // 必填，签名，见附录1
@@ -134,12 +90,14 @@ parent.wx.getLocation({
 #### 完整代码如下：
 
 ```js
-// 示例示示例，签名接口请自行开发
-// 参考文档：`https://qydev.weixin.qq.com/wiki/index.php?title=%E5%BE%AE%E4%BF%A1JS%E6%8E%A5%E5%8F%A3#.E9.99.84.E5.BD.951-JS-SDK.E4.BD.BF.E7.94.A8.E6.9D.83.E9.99.90.E7.AD.BE.E5.90.8D.E7.AE.97.E6.B3.95`
 querySignature() {
-    var url = HOST + 'signature'
-    http.apiPost(url, { url: window.location.href }).then(res => {
+   var url = 'http://njust.openapi.lordar.com/signature'
+    var param = {
+        url: window.location.href
+    }
+    http.apiPost(url, param).then(res => {
         if (res.status == 0) {
+            // 签名成功后
             var signatureParams = res.data
             this.useJsApi(signatureParams)
         }
@@ -150,7 +108,7 @@ useJsApi(signatureParams) {
     var _this = this
     parent.wx.config({
         debug: false,
-        appId: 'wxf2f6f120053cf5eb', // 必填，企业号的唯一标识，此处填写企业号corpid
+        appId: signatureParams.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
         timestamp: signatureParams.timestamp, // 必填，生成签名的时间戳
         nonceStr: signatureParams.nonceStr, // 必填，生成签名的随机串
         signature: signatureParams.signature, // 必填，签名，见附录1
