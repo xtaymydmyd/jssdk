@@ -1,6 +1,7 @@
-# 微信JS-SDK说明-获取地理位置
+# 微信JS-SDK说明
 
 参考文档：`https://qydev.weixin.qq.com/wiki/index.php?title=%E5%BE%AE%E4%BF%A1JS%E6%8E%A5%E5%8F%A3`
+
 
 ### 步骤一：引入JS文件
 
@@ -24,8 +25,10 @@
 第一步：调用签名接口获取appId、timestamp、nonceStr以及signature
 
 ```js
+// 示例示示例，签名接口请自行开发
+// 参考文档：`https://qydev.weixin.qq.com/wiki/index.php?title=%E5%BE%AE%E4%BF%A1JS%E6%8E%A5%E5%8F%A3#.E9.99.84.E5.BD.951-JS-SDK.E4.BD.BF.E7.94.A8.E6.9D.83.E9.99.90.E7.AD.BE.E5.90.8D.E7.AE.97.E6.B3.95`
 querySignature() {
-    var url = 'http://pay.lordar.com:18096/api/v2/appActivity/signature'
+    var url = HOST + 'signature'
     http.apiPost(url, { url: window.location.href }).then(res => {
         if (res.status == 0) {
             // 签名成功后
@@ -42,7 +45,7 @@ useJsApi(signatureParams) {
     var _this = this
     parent.wx.config({
         debug: false,
-        appId: signatureParams.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
+        appId: 'wxf2f6f120053cf5eb', // 必填，企业号的唯一标识，此处填写企业号corpid
         timestamp: signatureParams.timestamp, // 必填，生成签名的时间戳
         nonceStr: signatureParams.nonceStr, // 必填，生成签名的随机串
         signature: signatureParams.signature, // 必填，签名，见附录1
@@ -87,8 +90,10 @@ parent.wx.getLocation({
 #### 完整代码如下：
 
 ```js
+// 示例示示例，签名接口请自行开发
+// 参考文档：`https://qydev.weixin.qq.com/wiki/index.php?title=%E5%BE%AE%E4%BF%A1JS%E6%8E%A5%E5%8F%A3#.E9.99.84.E5.BD.951-JS-SDK.E4.BD.BF.E7.94.A8.E6.9D.83.E9.99.90.E7.AD.BE.E5.90.8D.E7.AE.97.E6.B3.95`
 querySignature() {
-    var url = 'http://pay.lordar.com:18096/api/v2/appActivity/signature'
+    var url = HOST + 'signature'
     http.apiPost(url, { url: window.location.href }).then(res => {
         if (res.status == 0) {
             var signatureParams = res.data
@@ -101,7 +106,7 @@ useJsApi(signatureParams) {
     var _this = this
     parent.wx.config({
         debug: false,
-        appId: signatureParams.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
+        appId: 'wxf2f6f120053cf5eb', // 必填，企业号的唯一标识，此处填写企业号corpid
         timestamp: signatureParams.timestamp, // 必填，生成签名的时间戳
         nonceStr: signatureParams.nonceStr, // 必填，生成签名的随机串
         signature: signatureParams.signature, // 必填，签名，见附录1
