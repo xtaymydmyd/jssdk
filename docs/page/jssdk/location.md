@@ -21,10 +21,15 @@
 
 !> 同一个url仅需调用一次
 
+!> `http://njust.openapi.lordar.com/signature`建议后台服务调用，前端可能存在跨域问题
+
 第一步：调用签名接口获取appId、timestamp、nonceStr以及signature
 
 ```js
 querySignature() {
+    // 建议后台服务调用，前端可能存在跨域问题
+    // 建议后台服务调用，前端可能存在跨域问题
+    // 建议后台服务调用，前端可能存在跨域问题
     var url = 'http://njust.openapi.lordar.com/signature'
     var param = {
         url: window.location.href
